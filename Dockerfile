@@ -1,6 +1,5 @@
 FROM alpine:latest
 
-# Cài đặt các tools cần thiết
 RUN apk add --no-cache \
     bash \
     curl \
@@ -11,25 +10,20 @@ RUN apk add --no-cache \
     bind-tools \
     jq
 
-# Cài đặt Subfinder
+# Add Go bin to PATH so installed tools are found
+ENV PATH="/root/go/bin:${PATH}"
+ENV GOPATH="/root/go"
+
 RUN go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-
-# Cài đặt Assetfinder
 RUN go install -v github.com/tomnomnom/assetfinder@latest
-
-# Cài đặt Httpx
 RUN go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
-
-# Cài đặt DNSx
 RUN go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+RUN go install -v github.com/owasp-amass/amass/v4/...@master
 
-# Cài đặt Amass (tùy chọn)
-RUN go install -v github.com/OWASP/Amass/v3/...@master
-
-# Copy scripts
 COPY scripts/ /scripts/
 RUN chmod +x /scripts/*.sh
 
 WORKDIR /workspace
 
-ENTRYPOINT ["/scripts/run_pipeline.sh"]
+# Use CMD (not ENTRYPOINT) so docker-compose `command:` can fully override it
+CMD ["/scripts/run_pipeline.sh"]
