@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  pipeline-worker:
+    build: .
+    container_name: recon-worker
+    working_dir: /workspace
+    volumes:
+      - ./inputs:/workspace/inputs
+      - ./outputs:/workspace/outputs
+      - ./config/provider-config.yaml:/root/.config/subfinder/provider-config.yaml:ro
+    environment:
+      - THREADS=${THREADS:-50}
+      - RUN_HTTPX=${RUN_HTTPX:-true}
+      - MAX_PARALLEL=${MAX_PARALLEL:-3}
+      - WEBHOOK_URL=${WEBHOOK_URL:-}
+    command: ["/scripts/parallel_pipeline.sh"]
+    networks:
+      - recon-network
+
+  # Browse results at http://localhost:8080
+  web:
+    image: nginx:alpine
+    container_name: recon-web
+    volumes:
+      - ./outputs:/usr/share/nginx/html:ro
+      - ./config/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - pipeline-worker
+    networks:
+      - recon-network
+
+networks:
+  recon-network:
+    driver: bridge

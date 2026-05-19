@@ -1,0 +1,4 @@
+# One domain per line. Lines starting with # are ignored.
+# example.com
+# target.org
+# foo.io

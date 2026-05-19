@@ -1,0 +1,22 @@
+# Subfinder v2 provider config
+# Replace placeholder values with your real API keys.
+# Free keys from: https://chaos.projectdiscovery.io (chaos)
+#                 https://account.shodan.io         (shodan)
+#                 https://www.virustotal.com         (virustotal)
+#                 https://censys.io/register         (censys)
+#                 https://app.binaryedge.io          (binaryedge)
+
+binaryedge:
+  - YOUR_BINARYEDGE_KEY
+
+censys:
+  - YOUR_CENSYS_ID:YOUR_CENSYS_SECRET
+
+chaos:
+  - YOUR_CHAOS_KEY
+
+shodan:
+  - YOUR_SHODAN_KEY
+
+virustotal:
+  - YOUR_VIRUSTOTAL_KEY

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  recon-pipeline:
+    build: .
+    container_name: recon-automation
+    working_dir: /workspace
+    volumes:
+      - ./inputs:/workspace/inputs
+      - ./outputs:/workspace/outputs
+      - ./config/provider-config.yaml:/root/.config/subfinder/provider-config.yaml:ro
+    environment:
+      - DOMAIN=${DOMAIN:-}
+      - THREADS=${THREADS:-50}
+      - RUN_HTTPX=${RUN_HTTPX:-true}
+      - WEBHOOK_URL=${WEBHOOK_URL:-}
+    command: ["/scripts/run_pipeline.sh"]
+    networks:
+      - recon-network
+
+networks:
+  recon-network:
+    driver: bridge
